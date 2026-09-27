@@ -5,8 +5,8 @@ const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string)?.trim
 
 // Allow app to boot even if env vars are missing (dev fallback)
 export const supabase = createClient(
-  supabaseUrl || 'https://fzefnqmpmzcdmkmjkagw.supabase.co',
-  supabaseAnonKey || 'sb_publishable_4TQWdhvCO798tBk3CfiJyw_twZqV4mZ',
+  supabaseUrl,
+  supabaseAnonKey,
   {
     auth: {
       persistSession: true,
