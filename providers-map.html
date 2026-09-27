@@ -1,0 +1,351 @@
+<title>Service Providers Within 10km Radius</title>
+<style>
+  :root {
+    --color-background: #f8fafc;
+    --color-surface: #ffffff;
+    --color-text: #0f172a;
+    --color-muted: #64748b;
+    --color-primary: #0e7490;
+    --color-primary-light: #06b6d4;
+    --color-primary-tint: #ecfeff;
+    --color-border: #e2e8f0;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --color-background: #0f172a;
+      --color-surface: #1e293b;
+      --color-text: #f1f5f9;
+      --color-muted: #94a3b8;
+      --color-primary: #22d3ee;
+      --color-primary-light: #67e8f9;
+      --color-primary-tint: #083344;
+      --color-border: #334155;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-background: #0f172a;
+    --color-surface: #1e293b;
+    --color-text: #f1f5f9;
+    --color-muted: #94a3b8;
+    --color-primary: #22d3ee;
+    --color-primary-light: #67e8f9;
+    --color-primary-tint: #083344;
+    --color-border: #334155;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    margin: 0;
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--color-primary);
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 8px;
+    color: var(--color-primary);
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .map-container {
+    background: var(--color-surface);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  #map {
+    width: 100%;
+    height: 500px;
+  }
+
+  .legend {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    margin-top: 16px;
+  }
+
+  .legend-title {
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: var(--color-primary);
+  }
+
+  .legend-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .legend-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .legend-icon.customer {
+    background: #2563eb;
+    color: white;
+  }
+
+  .legend-icon.provider {
+    background: #10b981;
+    color: white;
+  }
+
+  .legend-icon.radius {
+    background: transparent;
+    border: 2px dashed #8b5cf6;
+  }
+
+  .stats {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    margin-top: 16px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .stat-card {
+    text-align: center;
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    background: var(--color-primary-tint);
+    border: 1px solid var(--color-primary);
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 4px;
+  }
+
+  .stat-label {
+    font-size: 14px;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding: 16px;
+    }
+
+    #map {
+      height: 400px;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="header">
+  <h1 class="title">Service Providers Within 10km Radius</h1>
+  <p class="subtitle">Interactive map showing nearby verified service providers</p>
+</div>
+
+<div class="map-container">
+  <div id="map"></div>
+</div>
+
+<div class="legend">
+  <h3 class="legend-title">Map Legend</h3>
+  <div class="legend-items">
+    <div class="legend-item">
+      <div class="legend-icon customer">📍</div>
+      <span>Your Location</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-icon provider">👤</div>
+      <span>Service Provider</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-icon radius">○</div>
+      <span>10km Radius Zone</span>
+    </div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" id="customerCount">0</div>
+      <p class="stat-label">Customers Near You</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="providerCount">0</div>
+      <p class="stat-label">Providers Within Radius</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="radiusKm">10</div>
+      <p class="stat-label">Radius (kilometers)</p>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="avgRating">0.0</div>
+      <p class="stat-label">Average Provider Rating</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Sahaay Platform • Real-time GPS matching • 10km service radius</p>
+  <p>Interactive map showing service providers near your location</p>
+</div>
+
+<script>
+  // Initialize map
+  const map = L.map('map').setView([20.5937, 78.9629], 7); // Default to India center
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Example customer location (New Delhi)
+  const customerLocation = [28.6139, 77.2090];
+  const radius = 10; // 10km radius
+
+  // Example provider locations
+  const providers = [
+    { id: 'provider1', name: 'Ramesh Kumar', service: 'Electrician', rating: 4.5, lat: 28.6150, lng: 77.2200 },
+    { id: 'provider2', name: 'Suresh Verma', service: 'Plumber', rating: 4.2, lat: 28.6140, lng: 77.2080 },
+    { id: 'provider3', name: 'Mohit Sharma', service: 'Carpenter', rating: 4.8, lat: 28.6120, lng: 77.2100 },
+    { id: 'provider4', name: 'Amit Singh', service: 'Painter', rating: 4.0, lat: 28.6050, lng: 77.2050 },
+    { id: 'provider5', name: 'Rajesh Patel', service: 'Cleaner', rating: 4.3, lat: 28.6200, lng: 77.2150 },
+    { id: 'provider6', name: 'Kiran Rao', service: 'Driver', rating: 4.6, lat: 28.6100, lng: 77.2000 },
+    { id: 'provider7', name: 'Sunil Gupta', service: 'Caregiver', rating: 4.9, lat: 28.6000, lng: 77.1900 },
+    { id: 'provider8', name: 'Vikram Mehta', service: 'Technician', rating: 4.7, lat: 28.6300, lng: 77.2300 }
+  ];
+
+  // Add customer location marker
+  L.marker(customerLocation, {
+    icon: L.divIcon({
+      className: 'customer-marker',
+      html: '📍<div style="color: #2563eb; font-size: 12px; font-weight: bold;">You</div>',
+      iconSize: [40, 40]
+    })
+  }).addTo(map).bindPopup('<strong>Your Location</strong><br>New Delhi, India');
+
+  // Add provider markers
+  let totalRating = 0;
+  providers.forEach(provider => {
+    const marker = L.marker([provider.lat, provider.lng], {
+      icon: L.divIcon({
+        className: 'provider-marker',
+        html: `👤<div style="color: #10b981; font-size: 12px; font-weight: bold;">${provider.name}</div>`,
+        iconSize: [40, 40]
+      })
+    }).addTo(map);
+
+    const popupContent = `
+      <div style="padding: 8px;">
+        <strong>${provider.name}</strong>
+        <br/>
+        <span style="color: #666;">${provider.service}</span>
+        <br/>
+        <span style="color: #f59e0b;">⭐ ${provider.rating}</span>
+        <br/>
+        <span style="font-size: 11px; color: #888;">Within 10km radius</span>
+      </div>
+    `;
+
+    marker.bindPopup(popupContent);
+    totalRating += provider.rating;
+  });
+
+  // Draw 10km radius circle
+  L.circle(customerLocation, {
+    color: '#8b5cf6',
+    fillColor: '#8b5cf6',
+    fillOpacity: 0.1,
+    weight: 2,
+    radius: radius * 1000, // Convert km to meters
+    dashArray: '5, 5'
+  }).addTo(map).bindPopup(`<strong>10km Service Radius</strong><br>Providers within this circle can serve your location.`);
+
+  // Fit map to show all markers
+  const markers = L.featureGroup([
+    L.marker(customerLocation),
+    ...providers.map(p => L.marker([p.lat, p.lng]))
+  ]);
+  map.fitBounds(markers.getBounds().pad(0.1));
+
+  // Update stats
+  document.getElementById('customerCount').textContent = '1';
+  document.getElementById('providerCount').textContent = providers.length;
+  document.getElementById('avgRating').textContent = (totalRating / providers.length).toFixed(1);
+
+  // Add legend
+  const legend = L.control({ position: 'bottomright' });
+  legend.onAdd = function() {
+    const div = L.DomUtil.create('div', 'legend');
+    div.innerHTML = `
+      <div style="background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); font-size: 12px; color: #333;">
+        <strong>Legend</strong><br>
+        📍 Your Location<br>
+        👤 Service Provider<br>
+        <span style="color: #8b5cf6;">●</span> 10km Radius
+      </div>
+    `;
+    return div;
+  };
+  legend.addTo(map);
+</script>

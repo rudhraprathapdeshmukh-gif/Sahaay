@@ -1,0 +1,131 @@
+<title>Sahaay Booking Debug</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f8fafc;
+    color: #334155;
+  }
+  h1 {
+    color: #0f172a;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+  }
+  .info {
+    background: #e0f2fe;
+    border: 1px solid #7dd3fc;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  .error {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  .success {
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+  }
+  ul {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+  li {
+    margin: 10px 0;
+    padding: 10px;
+    border-left: 3px solid #3b82f6;
+  }
+  .action {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+  button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #2563eb;
+  }
+</style>
+
+<h1>Sahaay Booking Flow Debug</h1>
+
+<div class="info">
+  <p><strong>Dev Server:</strong> Running on <code>http://localhost:5184</code></p>
+  <p><strong>Issue:</strong> "Book Now" button redirects to blank page</p>
+  <p><strong>Status:</strong> Ready for testing</p>
+</div>
+
+<h2>Current State Analysis</h2>
+<ul>
+  <li><strong>BookingModal Component:</strong> Fixed to accept <code>serviceName</code> prop</li>
+  <li><strong>serviceName Prop:</strong> Passed from Home.tsx (<code>activeService?.name</code>) and FindProviders.tsx</li>
+  <li><strong>Problem Selector:</strong> Implemented with category-based options</li>
+  <li><strong>Manual Address Input:</strong> Removed - now auto-detects GPS location</li>
+  <li><strong>Type Safety:</strong> <code>npm run build</code> passes without errors</li>
+</ul>
+
+<h2>Potential Issues to Check</h2>
+<ol>
+  <li>JavaScript console errors when modal opens</li>
+  <li><code>serviceName</code> could be <code>undefined</code> or empty string</li>
+  <li>Modal rendering crash due to state mismatch</li>
+  <li>Browser redirect to wrong route</li>
+</ol>
+
+<div class="action">
+  <h2>Testing Steps</h2>
+  <p>1. Open <a href="http://localhost:5184" target="_blank">http://localhost:5184</a></p>
+  <p>2. Sign in with customer account</p>
+  <p>3. Enable location access</p>
+  <p>4. Select a service category</p>
+  <p>5. Click "Book Now" on a provider card</p>
+  <p>6. Check browser console for errors (F12 → Console)</p>
+</div>
+
+<div class="success">
+  <p><strong>Expected Result:</strong> Booking modal should open with:</p>
+  <ul>
+    <li>Auto-detected location displayed</li>
+    <li>Category-specific problem buttons</li>
+    <li>Emergency service toggle</li>
+    <li>Date/time pickers</li>
+  </ul>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Simple console helper
+    const consoleBtn = document.createElement('button');
+    consoleBtn.textContent = 'Open Dev Console (F12)';
+    consoleBtn.style.marginTop = '10px';
+    consoleBtn.onclick = function() {
+      alert('Press F12 to open Developer Tools, then click the Console tab.');
+    };
+    document.querySelector('.action').appendChild(consoleBtn);
+  });
+</script>

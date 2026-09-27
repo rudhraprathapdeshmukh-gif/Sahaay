@@ -1,0 +1,562 @@
+<title>Sahaay Pricing Structure</title>
+
+<style>
+:root {
+  --ground: #fafafa;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --accent: #0e7490;
+  --accent-light: #ecfeff;
+  --success: #059669;
+  --success-light: #d1fae5;
+  --warning: #f59e0b;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0f172a;
+    --surface: #1e293b;
+    --border: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #64748b;
+    --accent: #22d3ee;
+    --accent-light: #164e63;
+    --success: #10b981;
+    --success-light: #064e3b;
+    --warning: #fbbf24;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #0f172a;
+  --surface: #1e293b;
+  --border: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #64748b;
+  --accent: #22d3ee;
+  --accent-light: #164e63;
+  --success: #10b981;
+  --success-light: #064e3b;
+  --warning: #fbbf24;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--ground);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  line-height: 1.6;
+  padding-block: 48px;
+  padding-inline: 24px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.header h1 {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.header p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.pricing-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pricing-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.card-title {
+  flex: 1;
+}
+
+.card-title h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.card-title .unit {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.price-amount {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.price-label {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.card-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.breakdown-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.breakdown-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.breakdown-value.provider {
+  color: var(--success);
+}
+
+.breakdown-value.platform {
+  color: var(--text-primary);
+}
+
+.note-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-top: 24px;
+}
+
+.note-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.note-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.note-list li {
+  font-size: 15px;
+  color: var(--text-secondary);
+  padding-left: 24px;
+  position: relative;
+}
+
+.note-list li::before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.legend {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 20px;
+  background: var(--accent-light);
+  border-radius: 12px;
+  margin-top: 32px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-dot.provider {
+  background: var(--success);
+}
+
+.legend-dot.platform {
+  background: var(--text-tertiary);
+}
+
+@media (max-width: 768px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .legend {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+</style>
+
+<div class="container">
+  <header class="header">
+    <div class="badge">
+      <span>💰</span>
+      <span>Pricing Structure</span>
+    </div>
+    <h1>Sahaay Service Categories</h1>
+    <p>Transparent pricing for all service categories. Individual services will be added with specific rates.</p>
+  </header>
+
+  <div class="pricing-grid">
+    <!-- Electrician -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">
+          <h3>Electrician</h3>
+          <div class="unit">Per Visit</div>
+        </div>
+      </div>
+      <div class="card-description">
+        Fan Repair, Switch & Socket Repair, Light Installation, Wiring Repair
+      </div>
+      <div class="card-price">
+        <div class="price-amount">₹199</div>
+        <div class="price-label">starting</div>
+      </div>
+      <div class="card-breakdown">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Provider Earning</span>
+          <span class="breakdown-value provider">₹169 (85%)</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Platform Fee</span>
+          <span class="breakdown-value platform">₹30 (15%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plumber -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <div class="card-icon">🔧</div>
+        <div class="card-title">
+          <h3>Plumber</h3>
+          <div class="unit">Per Visit</div>
+        </div>
+      </div>
+      <div class="card-description">
+        Tap Repair, Pipe Leakage, Drain Blockage, Bathroom Plumbing
+      </div>
+      <div class="card-price">
+        <div class="price-amount">₹199</div>
+        <div class="price-label">starting</div>
+      </div>
+      <div class="card-breakdown">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Provider Earning</span>
+          <span class="breakdown-value provider">₹169 (85%)</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Platform Fee</span>
+          <span class="breakdown-value platform">₹30 (15%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carpenter -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <div class="card-icon">🪚</div>
+        <div class="card-title">
+          <h3>Carpenter</h3>
+          <div class="unit">Per Visit</div>
+        </div>
+      </div>
+      <div class="card-description">
+        Door Repair, Furniture Repair, Lock Repair, Shelf Installation
+      </div>
+      <div class="card-price">
+        <div class="price-amount">₹249</div>
+        <div class="price-label">starting</div>
+      </div>
+      <div class="card-breakdown">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Provider Earning</span>
+          <span class="breakdown-value provider">₹212 (85%)</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Platform Fee</span>
+          <span class="breakdown-value platform">₹37 (15%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painter -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <div class="card-icon">🎨</div>
+        <div class="card-title">
+          <h3>Painter</h3>
+          <div class="unit">Per Sq.Ft</div>
+        </div>
+      </div>
+      <div class="card-description">
+        Wall Painting, Room Painting, Touch-up, Exterior Painting
+      </div>
+      <div class="card-price">
+        <div class="price-amount">₹299</div>
+        <div class="price-label">starting</div>
+      </div>
+      <div class="card-breakdown">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Provider Earning</span>
+          <span class="breakdown-value provider">₹263 (88%)</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Platform Fee</span>
+          <span class="breakdown-value platform">₹36 (12%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Driver -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <div class="card-icon">🚗</div>
+        <div class="card-title">
+          <h3>Driver</h3>
+          <div class="unit">Per Day</div>
+        </div>
+      </div>
+      <div class="card-description">
+        Local Driver, Outstation Driver, Full-Day Driver
+      </div>
+      <div class="card-price">
+        <div class="price-amount">₹500</div>
+        <div class="price-label">starting</div>
+      </div>
+      <div class="card-breakdown">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Provider Earning</span>
+          <span class="breakdown-value provider">₹450 (90%)</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Platform Fee</span>
+          <span class="breakdown-value platform">₹50 (10%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cleaner -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <div class="card-icon">🧹</div>
+        <div class="card-title">
+          <h3>Cleaner</h3>
+          <div class="unit">Per Visit</div>
+        </div>
+      </div>
+      <div class="card-description">
+        Home Cleaning, Bathroom Cleaning, Kitchen Cleaning, Deep Cleaning
+      </div>
+      <div class="card-price">
+        <div class="price-amount">₹299</div>
+        <div class="price-label">starting</div>
+      </div>
+      <div class="card-breakdown">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Provider Earning</span>
+          <span class="breakdown-value provider">₹254 (85%)</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Platform Fee</span>
+          <span class="breakdown-value platform">₹45 (15%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Caregiver -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <div class="card-icon">❤️</div>
+        <div class="card-title">
+          <h3>Caregiver</h3>
+          <div class="unit">Per Day</div>
+        </div>
+      </div>
+      <div class="card-description">
+        Elder Care, Patient Care, Daily Assistance
+      </div>
+      <div class="card-price">
+        <div class="price-amount">₹400</div>
+        <div class="price-label">starting</div>
+      </div>
+      <div class="card-breakdown">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Provider Earning</span>
+          <span class="breakdown-value provider">₹352 (88%)</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Platform Fee</span>
+          <span class="breakdown-value platform">₹48 (12%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technician -->
+    <div class="pricing-card">
+      <div class="card-header">
+        <div class="card-icon">🔨</div>
+        <div class="card-title">
+          <h3>Technician</h3>
+          <div class="unit">Per Visit</div>
+        </div>
+      </div>
+      <div class="card-description">
+        AC Repair, Refrigerator Repair, Washing Machine Repair, TV Repair
+      </div>
+      <div class="card-price">
+        <div class="price-amount">₹299</div>
+        <div class="price-label">starting</div>
+      </div>
+      <div class="card-breakdown">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Provider Earning</span>
+          <span class="breakdown-value provider">₹254 (85%)</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Platform Fee</span>
+          <span class="breakdown-value platform">₹45 (15%)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot provider"></div>
+      <span>Provider Earning</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot platform"></div>
+      <span>Sahaay Platform Fee</span>
+    </div>
+  </div>
+
+  <div class="note-section">
+    <h2>Important Notes</h2>
+    <ul class="note-list">
+      <li>These are <strong>placeholder starting prices</strong> for each service category</li>
+      <li>Individual services within each category will have specific pricing based on complexity and materials</li>
+      <li>Platform fees vary by category (10-15%) to balance provider earnings with operational costs</li>
+      <li>All prices are in Indian Rupees (₹) and exclude GST where applicable</li>
+      <li>Actual booking amounts may vary based on service requirements, location, and materials needed</li>
+      <li>This structure is designed to be easily expandable as individual services are added</li>
+    </ul>
+  </div>
+</div>

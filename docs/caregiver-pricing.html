@@ -1,0 +1,599 @@
+<title>Caregiver Service Pricing</title>
+<style>
+:root {
+  --ground: #f9fafb;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --accent: #ec4899;
+  --accent-light: #fdf2f8;
+  --success: #10b981;
+  --success-light: #ecfdf5;
+  --info: #3b82f6;
+  --info-light: #eff6ff;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0f172a;
+    --surface: #1e293b;
+    --border: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #64748b;
+    --accent: #f472b6;
+    --accent-light: #831843;
+    --success: #34d399;
+    --success-light: #064e3b;
+    --info: #60a5fa;
+    --info-light: #1e3a8a;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #0f172a;
+  --surface: #1e293b;
+  --border: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #64748b;
+  --accent: #f472b6;
+  --accent-light: #831843;
+  --success: #34d399;
+  --success-light: #064e3b;
+  --info: #60a5fa;
+  --info-light: #1e3a8a;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--ground);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  line-height: 1.6;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.header p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.care-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.care-card {
+  background: var(--surface);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  padding: 28px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.care-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.care-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.care-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.care-title h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.care-title p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.duration-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.duration-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  padding: 0 12px 12px;
+}
+
+.duration-table td {
+  padding: 14px 12px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.duration-table tr:first-child td {
+  border-top: none;
+}
+
+.duration-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--info-light);
+  color: var(--info);
+  font-variant-numeric: tabular-nums;
+}
+
+.price-cell {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.earning-cell {
+  color: var(--success);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.fee-cell {
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.legend {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 24px;
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-dot.provider {
+  background: var(--success);
+}
+
+.legend-dot.platform {
+  background: var(--text-tertiary);
+}
+
+.note-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 32px;
+}
+
+.note-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.note-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.note-list li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding-left: 24px;
+  position: relative;
+}
+
+.note-list li::before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .care-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .duration-table {
+    font-size: 13px;
+  }
+
+  .duration-table th,
+  .duration-table td {
+    padding: 10px 8px;
+  }
+
+  .legend {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+</style>
+
+<div class="container">
+  <header class="header">
+    <div class="badge">❤️ Caregiver Services</div>
+    <h1>Care Services Pricing</h1>
+    <p>Compassionate care for your loved ones. Transparent pricing with multiple duration options.</p>
+  </header>
+
+  <div class="care-grid">
+    <!-- Elderly Assistance -->
+    <div class="care-card">
+      <div class="care-header">
+        <div class="care-icon">👴</div>
+        <div class="care-title">
+          <h3>Elderly Assistance</h3>
+          <p>Daily assistance for seniors, medication reminders, mobility support</p>
+        </div>
+      </div>
+      <table class="duration-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th>Customer Price</th>
+            <th>Provider Earns</th>
+            <th>Platform Fee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="duration-badge">1h</span></td>
+            <td class="price-cell">₹200</td>
+            <td class="earning-cell">₹176</td>
+            <td class="fee-cell">₹24</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">1.5h</span></td>
+            <td class="price-cell">₹300</td>
+            <td class="earning-cell">₹264</td>
+            <td class="fee-cell">₹36</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">3h</span></td>
+            <td class="price-cell">₹550</td>
+            <td class="earning-cell">₹484</td>
+            <td class="fee-cell">₹66</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Patient Care -->
+    <div class="care-card">
+      <div class="care-header">
+        <div class="care-icon">🏥</div>
+        <div class="care-title">
+          <h3>Patient Care</h3>
+          <p>Post-surgery care, medical assistance, health monitoring</p>
+        </div>
+      </div>
+      <table class="duration-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th>Customer Price</th>
+            <th>Provider Earns</th>
+            <th>Platform Fee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="duration-badge">1h</span></td>
+            <td class="price-cell">₹250</td>
+            <td class="earning-cell">₹220</td>
+            <td class="fee-cell">₹30</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">1.5h</span></td>
+            <td class="price-cell">₹375</td>
+            <td class="earning-cell">₹330</td>
+            <td class="fee-cell">₹45</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">3h</span></td>
+            <td class="price-cell">₹700</td>
+            <td class="earning-cell">₹616</td>
+            <td class="fee-cell">₹84</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Child Care -->
+    <div class="care-card">
+      <div class="care-header">
+        <div class="care-icon">👶</div>
+        <div class="care-title">
+          <h3>Child Care</h3>
+          <p>Child supervision, feeding assistance, activity support</p>
+        </div>
+      </div>
+      <table class="duration-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th>Customer Price</th>
+            <th>Provider Earns</th>
+            <th>Platform Fee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="duration-badge">1h</span></td>
+            <td class="price-cell">₹180</td>
+            <td class="earning-cell">₹158</td>
+            <td class="fee-cell">₹22</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">1.5h</span></td>
+            <td class="price-cell">₹270</td>
+            <td class="earning-cell">₹238</td>
+            <td class="fee-cell">₹32</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">3h</span></td>
+            <td class="price-cell">₹500</td>
+            <td class="earning-cell">₹440</td>
+            <td class="fee-cell">₹60</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Companion Care -->
+    <div class="care-card">
+      <div class="care-header">
+        <div class="care-icon">🤝</div>
+        <div class="care-title">
+          <h3>Companion Care</h3>
+          <p>Companionship, emotional support, social engagement</p>
+        </div>
+      </div>
+      <table class="duration-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th>Customer Price</th>
+            <th>Provider Earns</th>
+            <th>Platform Fee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="duration-badge">1h</span></td>
+            <td class="price-cell">₹150</td>
+            <td class="earning-cell">₹132</td>
+            <td class="fee-cell">₹18</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">1.5h</span></td>
+            <td class="price-cell">₹225</td>
+            <td class="earning-cell">₹198</td>
+            <td class="fee-cell">₹27</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">3h</span></td>
+            <td class="price-cell">₹420</td>
+            <td class="earning-cell">₹370</td>
+            <td class="fee-cell">₹50</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobility Assistance -->
+    <div class="care-card">
+      <div class="care-header">
+        <div class="care-icon">♿</div>
+        <div class="care-title">
+          <h3>Mobility Assistance</h3>
+          <p>Transfer assistance, wheelchair support, walking help</p>
+        </div>
+      </div>
+      <table class="duration-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th>Customer Price</th>
+            <th>Provider Earns</th>
+            <th>Platform Fee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="duration-badge">1h</span></td>
+            <td class="price-cell">₹220</td>
+            <td class="earning-cell">₹194</td>
+            <td class="fee-cell">₹26</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">1.5h</span></td>
+            <td class="price-cell">₹330</td>
+            <td class="earning-cell">₹290</td>
+            <td class="fee-cell">₹40</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">3h</span></td>
+            <td class="price-cell">₹600</td>
+            <td class="earning-cell">₹528</td>
+            <td class="fee-cell">₹72</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Post-Hospital Care -->
+    <div class="care-card">
+      <div class="care-header">
+        <div class="care-icon">🩺</div>
+        <div class="care-title">
+          <h3>Post-Hospital Care</h3>
+          <p>Recovery support, medication management, wound care assistance</p>
+        </div>
+      </div>
+      <table class="duration-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th>Customer Price</th>
+            <th>Provider Earns</th>
+            <th>Platform Fee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="duration-badge">1h</span></td>
+            <td class="price-cell">₹280</td>
+            <td class="earning-cell">₹246</td>
+            <td class="fee-cell">₹34</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">1.5h</span></td>
+            <td class="price-cell">₹420</td>
+            <td class="earning-cell">₹370</td>
+            <td class="fee-cell">₹50</td>
+          </tr>
+          <tr>
+            <td><span class="duration-badge">3h</span></td>
+            <td class="price-cell">₹800</td>
+            <td class="earning-cell">₹704</td>
+            <td class="fee-cell">₹96</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot provider"></div>
+      <span>Provider Earning (88%)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot platform"></div>
+      <span>Sahaay Platform Fee (12%)</span>
+    </div>
+  </div>
+
+  <div class="note-section">
+    <h2>Important Notes</h2>
+    <ul class="note-list">
+      <li>All prices are in Indian Rupees (₹) and exclude GST where applicable</li>
+      <li>Provider earnings are calculated at 88% of the customer price</li>
+      <li>Platform fee is 12% and covers Sahaay operational costs</li>
+      <li>Prices may vary based on specific care requirements and location</li>
+      <li>Longer duration options available upon request</li>
+      <li>Background-verified and trained caregivers only</li>
+    </ul>
+  </div>
+</div>

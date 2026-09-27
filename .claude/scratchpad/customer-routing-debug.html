@@ -1,0 +1,164 @@
+<title>Customer Routing Debug</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --card-bg: #ffffff;
+    --text: #1c1917;
+    --text-muted: #57534e;
+    --border: #e7e5e4;
+    --accent: #0d9488;
+    --accent-light: #ccfbf1;
+    --error: #dc2626;
+    --warning: #f59e0b;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0a09;
+      --card-bg: #1c1917;
+      --text: #fafaf9;
+      --text-muted: #a8a29e;
+      --border: #292524;
+      --accent: #14b8a6;
+      --accent-light: #134e4a;
+      --error: #f87171;
+      --warning: #fbbf24;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0c0a09;
+    --card-bg: #1c1917;
+    --text: #fafaf9;
+    --text-muted: #a8a29e;
+    --border: #292524;
+    --accent: #14b8a6;
+    --accent-light: #134e4a;
+    --error: #f87171;
+    --warning: #fbbf24;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 2rem;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .status-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .status-error {
+    border-left: 4px solid var(--error);
+  }
+
+  .status-warning {
+    border-left: 4px solid var(--warning);
+  }
+
+  .route-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .route-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .route-item:last-child {
+    border-bottom: none;
+  }
+
+  code {
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+  }
+
+  .issue {
+    color: var(--error);
+    font-weight: 600;
+  }
+
+  .fix {
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>
+
+<div class="container">
+  <h1>Customer Routing Debug</h1>
+
+  <div class="status-card status-error">
+    <h2>🚨 Issue Found</h2>
+    <p class="issue">Customer routes are not opening - pages redirect to sign-in or show blank</p>
+  </div>
+
+  <div class="status-card">
+    <h2>Current Route Structure</h2>
+    <ul class="route-list">
+      <li class="route-item">
+        <span><code>/</code></span>
+        <span>Home</span>
+      </li>
+      <li class="route-item">
+        <span><code>/bookings</code></span>
+        <span>RoleDashboardRouter(customer)</span>
+      </li>
+      <li class="route-item">
+        <span><code>/request</code></span>
+        <span>RoleDashboardRouter(customer)</span>
+      </li>
+      <li class="route-item">
+        <span><code>/history</code></span>
+        <span>RoleDashboardRouter(customer)</span>
+      </li>
+      <li class="route-item">
+        <span><code>/profile</code></span>
+        <span>RoleDashboardRouter(customer)</span>
+      </li>
+      <li class="route-item">
+        <span><code>/notifications</code></span>
+        <span>RoleDashboardRouter(customer)</span>
+      </li>
+      <li class="route-item">
+        <span><code>/help-support</code></span>
+        <span>RoleDashboardRouter(customer)</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="status-card status-warning">
+    <h2>Root Cause</h2>
+    <p>The <code>RoleDashboardRouter</code> is being called but not properly rendering customer pages.</p>
+    <p><strong>Problem:</strong> The component structure expects nested routes with <code>&lt;Routes&gt;</code> but we're trying to use it as a direct renderer.</p>
+  </div>
+
+  <div class="status-card">
+    <h2>✅ Solution</h2>
+    <p class="fix">Fix the RoleDashboardRouter to directly return the appropriate component instead of using nested Routes.</p>
+    <p>This has been updated - the component now calls <code>getSubRoute()</code> directly.</p>
+  </div>
+</div>

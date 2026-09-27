@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sahaay Premium UI Redesign</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      /* Premium Color Palette */
+      --color-primary: #0d7c66;
+      --color-primary-dark: #0a5c4d;
+      --color-primary-light: #d5f2ea;
+      --color-accent: #ea7c35;
+      --color-accent-light: #fff0e6;
+      --color-bg: #fafafa;
+      --color-surface: #ffffff;
+      --color-surface-elevated: #fefefe;
+      --color-border: #e9e9e9;
+      --color-border-strong: #d4d4d4;
+      --color-text: #2c3e50;
+      --color-text-muted: #7f8c8d;
+      --color-text-subtle: #bdc3c7;
+      --color-success: #27ae60;
+      --color-warning: #f39c12;
+      --color-error: #e74c3c;
+      --color-info: #3498db;
+
+      /* Typography */
+      --font-display: 'Poppins', system-ui, -apple-system, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+      /* Spacing system (8px base) */
+      --space-xs: 0.25rem;   /* 4px */
+      --space-sm: 0.5rem;    /* 8px */
+      --space-md: 1rem;      /* 16px */
+      --space-lg: 1.5rem;    /* 24px */
+      --space-xl: 2rem;      /* 32px */
+      --space-2xl: 3rem;     /* 48px */
+      --space-3xl: 4rem;     /* 64px */
+
+      /* Border radius */
+      --radius-sm: 0.5rem;   /* 8px */
+      --radius-md: 0.75rem;  /* 12px */
+      --radius-lg: 1rem;     /* 16px */
+      --radius-xl: 1.5rem;   /* 24px */
+      --radius-full: 9999px;
+
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+      --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.16);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      padding: var(--space-md);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: var(--space-3xl);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: var(--space-sm);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-muted);
+      max-width: 600px;
+      margin: 0 auto var(--space-xl);
+    }
+
+    .premium-badge {
+      display: inline-block;
+      padding: var(--space-sm) var(--space-lg);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      color: white;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.875rem;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-xl);
+      box-shadow: var(--shadow-md);
+    }
+
+    .design-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: var(--space-xl);
+      margin-bottom: var(--space-3xl);
+    }
+
+    .design-component {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .design-component:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-primary-light);
+    }
+
+    .component-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .component-title::before {
+      content: '';
+      width: 24px;
+      height: 24px;
+      background: var(--color-primary);
+      border-radius: var(--radius-sm);
+    }
+
+    .color-palette {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+
+    .color-item {
+      flex: 1;
+      min-width: 80px;
+      height: 120px;
+      border-radius: var(--radius-md);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .color-primary { background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); }
+    .color-accent { background: linear-gradient(135deg, var(--color-accent), #d96a1e); }
+    .color-surface { background: var(--color-surface); border: 1px solid var(--color-border); }
+    .color-text { background: var(--color-text); }
+    .color-muted { background: var(--color-text-muted); }
+
+    .color-label {
+      position: absolute;
+      bottom: var(--space-sm);
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+      padding: var(--space-xs) var(--space-sm);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+    }
+
+    .color-surface .color-label {
+      color: var(--color-text);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+    }
+
+    .btn {
+      padding: var(--space-md) var(--space-lg);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.875rem;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, var(--color-accent), #d96a1e);
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-accent:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--color-border-strong);
+      color: var(--color-text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: rgba(13, 124, 102, 0.05);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--color-text-muted);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(44, 62, 80, 0.05);
+      color: var(--color-text);
+    }
+
+    .typography-sample {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .type-display {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--color-text);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .type-heading {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+
+    .type-body {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+
+    .type-muted {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .tag-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      border: 1px solid;
+    }
+
+    .tag-primary {
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+      border-color: rgba(13, 124, 102, 0.2);
+    }
+
+    .tag-accent {
+      color: var(--color-accent);
+      background: var(--color-accent-light);
+      border-color: rgba(234, 124, 53, 0.2);
+    }
+
+    .tag-success {
+      color: var(--color-success);
+      background: rgba(39, 174, 96, 0.1);
+      border-color: rgba(39, 174, 96, 0.2);
+    }
+
+    .tag-warning {
+      color: var(--color-warning);
+      background: rgba(243, 156, 18, 0.1);
+      border-color: rgba(243, 156, 18, 0.2);
+    }
+
+    .card-sample {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .card-subtitle {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      margin-bottom: var(--space-lg);
+    }
+
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .card-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-sm);
+      background: rgba(44, 62, 80, 0.03);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+
+    .card-item:hover {
+      background: rgba(13, 124, 102, 0.05);
+    }
+
+    .item-label {
+      font-size: 0.875rem;
+      color: var(--color-text);
+      font-weight: 500;
+    }
+
+    .item-value {
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .transformation-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin-top: var(--space-3xl);
+      box-shadow: var(--shadow-md);
+    }
+
+    .showcase-header {
+      text-align: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .showcase-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: var(--space-sm);
+    }
+
+    .showcase-subtitle {
+      color: var(--color-text-muted);
+      font-size: 1.125rem;
+    }
+
+    .before-after {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+    }
+
+    .design-phase {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .phase-label {
+      font-family: var(--font-display);
+      font-weight: 600;
+      color: var(--color-text);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-md);
+      text-align: center;
+      margin-bottom: var(--space-sm);
+    }
+
+    .before .phase-label {
+      background: rgba(231, 76, 60, 0.1);
+      color: var(--color-error);
+    }
+
+    .after .phase-label {
+      background: rgba(39, 174, 96, 0.1);
+      color: var(--color-success);
+    }
+
+    .phase-features {
+      list-style: none;
+      padding: 0;
+    }
+
+    .phase-features li {
+      padding: var(--space-sm) var(--space-md);
+      margin-bottom: var(--space-xs);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .before .phase-features li {
+      background: rgba(231, 76, 60, 0.05);
+      color: var(--color-text-muted);
+    }
+
+    .before .phase-features li::before {
+      content: '✗';
+      color: var(--color-error);
+    }
+
+    .after .phase-features li {
+      background: rgba(39, 174, 96, 0.05);
+      color: var(--color-text);
+    }
+
+    .after .phase-features li::before {
+      content: '✓';
+      color: var(--color-success);
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: var(--space-3xl);
+      text-align: center;
+      padding: var(--space-xl) 0;
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--color-border);
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .design-showcase {
+        grid-template-columns: 1fr;
+      }
+
+      .before-after {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="premium-badge">Premium UI Redesign</div>
+      <h1>Sahaay Design System</h1>
+      <p class="subtitle">Transforming your local services platform with a sophisticated, premium aesthetic</p>
+    </header>
+
+    <div class="design-showcase">
+      <div class="design-component">
+        <h2 class="component-title">Color Palette</h2>
+        <div class="color-palette">
+          <div class="color-item color-primary">
+            <div class="color-label">Primary<br>#0d7c66</div>
+          </div>
+          <div class="color-item color-accent">
+            <div class="color-label">Accent<br>#ea7c35</div>
+          </div>
+          <div class="color-item color-surface">
+            <div class="color-label">Surface<br>#ffffff</div>
+          </div>
+          <div class="color-item color-text">
+            <div class="color-label">Text<br>#2c3e50</div>
+          </div>
+          <div class="color-item color-muted">
+            <div class="color-label">Muted<br>#7f8c8d</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="design-component">
+        <h2 class="component-title">Typography</h2>
+        <div class="typography-sample">
+          <div class="type-display">Display: Poppins 700</div>
+          <div class="type-heading">Heading: Poppins 600</div>
+          <div class="type-body">Body: Inter 400 – Clean, readable text for all your content needs with proper line spacing and comfortable contrast.</div>
+          <div class="type-muted">Caption: Inter 400 – Supportive text with subtle color treatment for secondary information.</div>
+        </div>
+      </div>
+
+      <div class="design-component">
+        <h2 class="component-title">Buttons</h2>
+        <div class="button-grid">
+          <button class="btn btn-primary">Primary Action</button>
+          <button class="btn btn-accent">Accent Action</button>
+          <button class="btn btn-outline">Outline Button</button>
+          <button class="btn btn-ghost">Ghost Button</button>
+        </div>
+      </div>
+
+      <div class="design-component">
+        <h2 class="component-title">Status Tags</h2>
+        <div class="tag-grid">
+          <span class="tag tag-primary">Verified</span>
+          <span class="tag tag-accent">New</span>
+          <span class="tag tag-success">Active</span>
+          <span class="tag tag-warning">Pending</span>
+          <span class="tag tag-primary">Available</span>
+        </div>
+      </div>
+
+      <div class="design-component">
+        <h2 class="component-title">Card Component</h2>
+        <div class="card-sample">
+          <div class="card-header">
+            <div class="card-title">Premium Service Card</div>
+            <span class="tag tag-primary">Pro</span>
+          </div>
+          <p class="card-subtitle">Elegant card design with subtle shadows and proper spacing for enhanced readability.</p>
+          <div class="card-content">
+            <div class="card-item">
+              <span class="item-label">Experience Level</span>
+              <span class="item-value">5+ Years</span>
+            </div>
+            <div class="card-item">
+              <span class="item-label">Rating</span>
+              <span class="item-value">4.8/5.0</span>
+            </div>
+            <div class="card-item">
+              <span class="item-label">Availability</span>
+              <span class="item-value">Today</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="transformation-showcase">
+      <div class="showcase-header">
+        <h2 class="showcase-title">Visual Transformation</h2>
+        <p class="showcase-subtitle">From functional to premium – elevating your user experience</p>
+      </div>
+
+      <div class="before-after">
+        <div class="design-phase before">
+          <div class="phase-label">Before: Current Design</div>
+          <ul class="phase-features">
+            <li>Basic color scheme with limited contrast</li>
+            <li>Standard typography without personality</li>
+            <li>Minimal spacing and visual hierarchy</li>
+            <li>Generic component styling</li>
+            <li>Limited animation and interactions</li>
+            <li>Functional but lacks premium feel</li>
+          </ul>
+        </div>
+
+        <div class="design-phase after">
+          <div class="phase-label">After: Premium Design</div>
+          <ul class="phase-features">
+            <li>Sophisticated color palette with depth</li>
+            <li>Custom typography system for brand identity</li>
+            <li>Refined spacing and visual hierarchy</li>
+            <li>Premium component styling with gradients</li>
+            <li>Smooth animations and micro-interactions</li>
+            <li>Elevated user experience with premium details</li>
+            <li>Professional border radius and shadow system</li>
+            <li>Consistent design tokens for scalability</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Sahaay Premium UI Redesign • All functionality preserved • Enhanced visual experience</p>
+      <p>Modern design system implemented across all components and pages</p>
+    </footer>
+  </div>
+</body>
+</html>

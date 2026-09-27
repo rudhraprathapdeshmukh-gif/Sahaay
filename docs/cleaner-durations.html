@@ -1,0 +1,586 @@
+<title>Cleaner Service Durations</title>
+<style>
+:root {
+  --ground: #f9fafb;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --accent: #059669;
+  --accent-light: #d1fae5;
+  --success: #10b981;
+  --success-light: #ecfdf5;
+  --warning: #f59e0b;
+  --warning-light: #fffbeb;
+  --info: #3b82f6;
+  --info-light: #eff6ff;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0f172a;
+    --surface: #1e293b;
+    --border: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #64748b;
+    --accent: #10b981;
+    --accent-light: #064e3b;
+    --success: #34d399;
+    --success-light: #064e3b;
+    --warning: #fbbf24;
+    --warning-light: #78350f;
+    --info: #60a5fa;
+    --info-light: #1e3a8a;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #0f172a;
+  --surface: #1e293b;
+  --border: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #64748b;
+  --accent: #10b981;
+  --accent-light: #064e3b;
+  --success: #34d399;
+  --success-light: #064e3b;
+  --warning: #fbbf24;
+  --warning-light: #78350f;
+  --info: #60a5fa;
+  --info-light: #1e3a8a;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--ground);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  line-height: 1.6;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-light);
+  color: var(--accent);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.header p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 24px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--text-tertiary);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.duration-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.duration-card {
+  background: var(--surface);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  padding: 32px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.duration-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.duration-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 8px;
+}
+
+.duration-badge.one-hour {
+  background: linear-gradient(135deg, var(--info-light), var(--info));
+  color: white;
+}
+
+.duration-badge.one-five {
+  background: linear-gradient(135deg, var(--success-light), var(--success));
+  color: white;
+}
+
+.duration-badge.two-hours {
+  background: linear-gradient(135deg, var(--warning-light), var(--warning));
+  color: white;
+}
+
+.duration-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.duration-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.price-section {
+  background: var(--ground);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.price-amount {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.price-label {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.work-scope {
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.work-scope h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.work-scope h3::before {
+  content: "🧹";
+  font-size: 20px;
+}
+
+.work-scope ul {
+  list-style: none;
+}
+
+.work-scope li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  padding-left: 24px;
+  position: relative;
+}
+
+.work-scope li::before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.household-timing {
+  background: var(--accent-light);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.household-timing h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.household-timing h3::before {
+  content: "👨‍👩‍👧‍👦";
+  font-size: 20px;
+}
+
+.timing-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.timing-label {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.timing-value {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.timing-note {
+  font-size: 12px;
+  color: var(--accent);
+  font-style: italic;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.summary-section {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 48px;
+  border: 1px solid var(--border);
+}
+
+.summary-section h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.summary-item {
+  padding: 20px;
+  background: var(--ground);
+  border-radius: 12px;
+}
+
+.summary-item h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.summary-item p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.legend {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 24px;
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-dot.quick {
+  background: linear-gradient(135deg, var(--info-light), var(--info));
+}
+
+.legend-dot.regular {
+  background: linear-gradient(135deg, var(--success-light), var(--success));
+}
+
+.legend-dot.comprehensive {
+  background: linear-gradient(135deg, var(--warning-light), var(--warning));
+}
+
+.note {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+@media (max-width: 768px) {
+  .duration-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .legend {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+</style>
+
+<div class="container">
+  <header class="header">
+    <div class="badge">🧹 Cleaner Service Options</div>
+    <h1>Time-Based Household Help</h1>
+    <p class="subtitle">Three duration options for regular maid/domestic-help work. Based on a typical 4-member household.</p>
+  </header>
+
+  <div class="duration-grid">
+    <!-- 1 Hour Option -->
+    <div class="duration-card">
+      <div class="duration-badge one-hour">1h</div>
+      <div>
+        <h2 class="duration-title">Quick Clean</h2>
+        <p class="duration-desc">Fast kitchen and basic cleaning</p>
+      </div>
+
+      <div class="price-section">
+        <div class="price-amount">₹120</div>
+        <div class="price-label">Per Visit</div>
+      </div>
+
+      <div class="work-scope">
+        <h3>Work Scope</h3>
+        <ul>
+          <li>Kitchen cleaning</li>
+          <li>Dish washing</li>
+          <li>Basic sweeping</li>
+          <li>Dusting surfaces</li>
+        </ul>
+      </div>
+
+      <div class="household-timing">
+        <h3>4-Member Household Timing</h3>
+        <div class="timing-breakdown">
+          <div class="timing-row">
+            <span class="timing-label">Active Work</span>
+            <span class="timing-value">40-45 min</span>
+          </div>
+          <div class="timing-row">
+            <span class="timing-label">Setup/Wrap-up</span>
+            <span class="timing-value">15-20 min</span>
+          </div>
+        </div>
+        <p class="timing-note">Perfect for quick daily maintenance</p>
+      </div>
+    </div>
+
+    <!-- 1.5 Hours Option -->
+    <div class="duration-card">
+      <div class="duration-badge one-five">1.5h</div>
+      <div>
+        <h2 class="duration-title">Regular Service</h2>
+        <p class="duration-desc">Maid service with more coverage</p>
+      </div>
+
+      <div class="price-section">
+        <div class="price-amount">₹180</div>
+        <div class="price-label">Per Visit</div>
+      </div>
+
+      <div class="work-scope">
+        <h3>Work Scope</h3>
+        <ul>
+          <li>Kitchen cleaning</li>
+          <li>Dish washing</li>
+          <li>Floor mopping</li>
+          <li>Laundry start</li>
+          <li>Bathroom touch-up</li>
+          <li>General tidying</li>
+        </ul>
+      </div>
+
+      <div class="household-timing">
+        <h3>4-Member Household Timing</h3>
+        <div class="timing-breakdown">
+          <div class="timing-row">
+            <span class="timing-label">Active Work</span>
+            <span class="timing-value">1 hour</span>
+          </div>
+          <div class="timing-row">
+            <span class="timing-label">Multi-task Setup</span>
+            <span class="timing-value">30 min</span>
+          </div>
+        </div>
+        <p class="timing-note">Balanced coverage for most households</p>
+      </div>
+    </div>
+
+    <!-- 2 Hours Option -->
+    <div class="duration-card">
+      <div class="duration-badge two-hours">2h</div>
+      <div>
+        <h2 class="duration-title">Comprehensive Clean</h2>
+        <p class="duration-desc">Full household cleaning & assistance</p>
+      </div>
+
+      <div class="price-section">
+        <div class="price-amount">₹240</div>
+        <div class="price-label">Per Visit</div>
+      </div>
+
+      <div class="work-scope">
+        <h3>Work Scope</h3>
+        <ul>
+          <li>Full kitchen cleaning</li>
+          <li>Dish washing</li>
+          <li>Mopping all areas</li>
+          <li>Laundry (wash + dry)</li>
+          <li>Bathroom deep-clean</li>
+          <li>Change bed linens</li>
+          <li>Dusting all surfaces</li>
+        </ul>
+      </div>
+
+      <div class="household-timing">
+        <h3>4-Member Household Timing</h3>
+        <div class="timing-breakdown">
+          <div class="timing-row">
+            <span class="timing-label">Active Work</span>
+            <span class="timing-value">1.5 hours</span>
+          </div>
+          <div class="timing-row">
+            <span class="timing-label">Laundry Buffer</span>
+            <span class="timing-value">30 min</span>
+          </div>
+        </div>
+        <p class="timing-note">Complete household coverage</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot quick"></div>
+      <span>Quick Clean (1h)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot regular"></div>
+      <span>Regular Service (1.5h)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot comprehensive"></div>
+      <span>Comprehensive Clean (2h)</span>
+    </div>
+  </div>
+
+  <div class="summary-section">
+    <h2>What This Covers</h2>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <h3>🧹 Cleaning Focus</h3>
+        <p>Daily household cleaning work that maids typically handle: sweeping, mopping, dusting, and surface cleaning.</p>
+      </div>
+      <div class="summary-item">
+        <h3>🍽️ Kitchen & Dishes</h3>
+        <p>All durations include kitchen cleaning and dish washing, the core daily chore for most households.</p>
+      </div>
+      <div class="summary-item">
+        <h3>👕 Laundry Support</h3>
+        <p>Longer durations include laundry start/wash/dry cycles — managed within the timing window.</p>
+      </div>
+      <div class="summary-item">
+        <h3>🏠 Household Assistance</h3>
+        <p>Basic help with daily tasks, not deep cleaning or specialized services (which would be separate).</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="note">
+    Note: These are customer prices (exclusive of platform fees). Work scope assumes a typical 4‑member household with moderate daily mess.
+  </p>
+</div>

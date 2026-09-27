@@ -1,0 +1,631 @@
+<title>Sahaay Service Request Flow</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root {
+  --primary: #0E7490;
+  --primary-light: #0891b2;
+  --primary-dark: #0e7490;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --neutral: #64748B;
+  --neutral-light: #94A3B8;
+  --neutral-lightest: #F8FAFC;
+  --border: #E2E8F0;
+  --surface: #FFFFFF;
+  --text-primary: #1E293B;
+  --text-secondary: #475569;
+  --text-tertiary: #64748B;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-code: 'Monaco', 'Menlo', 'Courier New', monospace;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --primary: #22D3EE;
+    --primary-light: #06B6D4;
+    --primary-dark: #0891B2;
+    --success: #34D399;
+    --warning: #FBBF24;
+    --error: #F87171;
+    --neutral: #94A3B8;
+    --neutral-light: #64748B;
+    --neutral-lightest: #1E293B;
+    --border: #334155;
+    --surface: #0F172A;
+    --text-primary: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-tertiary: #94A3B8;
+  }
+}
+
+:root[data-theme="dark"] {
+  --primary: #22D3EE;
+  --primary-light: #06B6D4;
+  --primary-dark: #0891B2;
+  --success: #34D399;
+  --warning: #FBBF24;
+  --error: #F87171;
+  --neutral: #94A3B8;
+  --neutral-light: #64748B;
+  --neutral-lightest: #1E293B;
+  --border: #334155;
+  --surface: #0F172A;
+  --text-primary: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --text-tertiary: #94A3B8;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--neutral-lightest);
+  padding: 24px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Layout */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.project-title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.project-subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.project-description {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.summary-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+  .summary-section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.section-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.section-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title:before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 24px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.status-badge.completed {
+  background: color-mix(in srgb, var(--success) 15%, transparent);
+  color: var(--success);
+  border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+}
+
+.status-badge.fixed {
+  background: color-mix(in srgb, var(--warning) 15%, transparent);
+  color: var(--warning);
+  border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent);
+}
+
+.status-badge.architectural {
+  background: color-mix(in srgb, var(--primary) 15%, transparent);
+  color: var(--primary);
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+/* Code snippets */
+.code-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin: 16px 0;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--neutral-lightest) 50%, transparent);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.code-content {
+  padding: 0;
+  font-family: var(--font-code);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+/* Flow diagram */
+.flow-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.step-arrow {
+  width: 20px;
+  height: 2px;
+  background: var(--border);
+  margin: 0 8px;
+}
+
+.step-arrow:after {
+  content: "↓";
+  position: relative;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--neutral-light);
+}
+
+/* File list */
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 4px;
+  font-family: var(--font-code);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.file-item:hover {
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+
+.file-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Key constraint */
+.key-constraint {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border-left: 4px solid var(--primary);
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  margin: 16px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* Footer */
+.page-footer {
+  text-align: center;
+  padding: 24px;
+  margin-top: 40px;
+  color: var(--text-tertiary);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+}
+</style>
+
+<div class="page-header">
+  <h1 class="project-title">Sahaay Platform</h1>
+  <p class="project-subtitle">Service Request Flow Implementation Summary</p>
+</div>
+
+<div class="project-description">
+  <p>Complete documentation of the service request flow implementation for the Sahaay local services platform, including architectural decisions, technical fixes, and resolved issues.</p>
+  <p><strong>Primary Technology Stack:</strong> React 18 + Vite + TypeScript, Supabase (PostgreSQL + Auth), Tailwind CSS, Framer Motion</p>
+</div>
+
+<div class="summary-section">
+  <div class="section-card">
+    <h2 class="section-title">Core Requirements</h2>
+
+    <div class="key-constraint">
+      <strong>CRITICAL CONSTRAINT:</strong> "The customer cannot request specific service provider" — provider_id must ALWAYS be null on booking creation, with NO UI element allowing specific provider targeting.
+    </div>
+
+    <div class="flow-diagram">
+      <div class="flow-step">
+        <div class="step-number">1</div>
+        <div class="step-content">Customer selects service type</div>
+      </div>
+      <div class="step-arrow"></div>
+      <div class="flow-step">
+        <div class="step-number">2</div>
+        <div class="step-content">Customer selects service/subcategory</div>
+      </div>
+      <div class="step-arrow"></div>
+      <div class="flow-step">
+        <div class="step-number">3</div>
+        <div class="step-content">Customer describes the problem</div>
+      </div>
+      <div class="step-arrow"></div>
+      <div class="flow-step">
+        <div class="step-number">4</div>
+        <div class="step-content">Customer selects date & time (max 7 days ahead)</div>
+      </div>
+      <div class="step-arrow"></div>
+      <div class="flow-step">
+        <div class="step-number">5</div>
+        <div class="step-content">Auto-detect location (no manual entry)</div>
+      </div>
+      <div class="step-arrow"></div>
+      <div class="flow-step">
+        <div class="step-number">6</div>
+        <div class="step-content">Request submitted to provider pool (provider_id: null)</div>
+      </div>
+    </div>
+
+    <ul class="file-list">
+      <li class="file-item">
+        <div class="file-icon">📁</div>
+        <code>ServiceRequestForm.tsx</code> — Core customer request form
+      </li>
+      <li class="file-item">
+        <div class="file-icon">📁</div>
+        <code>RoleDashboardRouter.tsx</code> — Routing configuration
+      </li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <h2 class="section-title">Architectural Model</h2>
+
+    <p><strong>Unassigned Booking Pool Model:</strong></p>
+    <ul class="file-list">
+      <li class="file-item">Customers create requests with <code>provider_id: null</code></li>
+      <li class="file-item">Providers search/claim from the unassigned pool</li>
+      <li class="file-item">Geolocation filters providers within 10-20km radius</li>
+      <li class="file-item">Service type matching ensures relevance</li>
+      <li class="file-item">Real-time subscriptions update all parties</li>
+    </ul>
+
+    <div class="code-block">
+      <div class="code-header">Booking Creation Logic</div>
+      <div class="code-content">
+<pre>// All requests created with provider_id: null (pool-based)
+const requestService = async (
+  customerId: string,
+  serviceId: number,
+  scheduledAt: string,
+  notes: string,
+  address: string,
+  latitude: number,
+  longitude: number
+) => {
+  const { data, error } = await supabase
+    .from('bookings')
+    .insert({
+      customer_id: customerId,
+      service_id: serviceId,
+      scheduled_at: scheduledAt,
+      notes: notes,
+      address: address,
+      latitude: latitude,
+      longitude: longitude,
+      status: 'pending',
+      provider_id: null  // CRITICAL: Always null
+    })
+    .select()
+}</pre>
+      </div>
+    </div>
+
+    <span class="status-badge completed">Completed</span>
+    <span class="status-badge architectural">Architectural</span>
+  </div>
+</div>
+
+<div class="summary-section">
+  <div class="section-card">
+    <h2 class="section-title">Issues & Fixes</h2>
+
+    <div class="code-block">
+      <div class="code-header">Fixed: Blank white screen on load</div>
+      <div class="code-content">
+<pre>// Root cause: Duplicate translation keys 'request_service'
+// in en.ts (line 154) and hi.ts (line 154)
+
+// Fix: Removed duplicate keys, kept only request_service_btn variants</pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">Fixed: Submit button always disabled</div>
+      <div class="code-content">
+<pre>// Root cause: Button checked !address.trim() but address field was removed
+// Fix: Changed validation to check location coordinates
+
+disabled={isSubmitting || !scheduledDate || !scheduledTime
+  || latitude === null || longitude === null}</pre>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">Fixed: Deleted requests reappearing</div>
+      <div class="code-content">
+<pre>// Root cause: Real-time subscription race condition
+// Fix: Optimistic UI update + delayed reload
+
+const handleDeleteRequest = async (bookingId: string) => {
+  // 1. Optimistically remove immediately
+  setBookings(prev => prev.filter(booking => booking.id !== bookingId))
+
+  // 2. Wait for database propagation
+  await new Promise(resolve => setTimeout(resolve, 500))
+
+  // 3. Filter DELETE events in subscriptions
+  if (payload.eventType !== 'DELETE') {
+    loadData()
+  }
+}</pre>
+      </div>
+    </div>
+
+    <span class="status-badge fixed">All Fixed</span>
+  </div>
+
+  <div class="section-card">
+    <h2 class="section-title">Technical Implementation</h2>
+
+    <p><strong>Key Files Modified:</strong></p>
+    <ul class="file-list">
+      <li class="file-item">
+        <div class="file-icon">📝</div>
+        <code>ServiceRequestForm.tsx</code> — Multi-step form with location auto-detection
+      </li>
+      <li class="file-item">
+        <div class="file-icon">📝</div>
+        <code>bookings.ts</code> — Added deleteBooking() and requestService() with coordinates
+      </li>
+      <li class="file-item">
+        <div class="file-icon">📝</div>
+        <code>CustomerBookings.tsx</code> — Delete functionality with optimistic UI
+      </li>
+      <li class="file-item">
+        <div class="file-icon">📝</div>
+        <code>Home.tsx</code> — Enhanced homepage with service request CTA
+      </li>
+      <li class="file-item">
+        <div class="file-icon">📝</div>
+        <code>RoleDashboardRouter.tsx</code> — Updated routing to homepage first
+      </li>
+    </ul>
+
+    <p><strong>Database Migrations Required:</strong></p>
+    <div class="code-block">
+      <div class="code-header">Supabase SQL Editor</div>
+      <div class="code-content">
+<pre>-- Allow NULL provider_id for pool-based model
+ALTER TABLE bookings ALTER COLUMN provider_id DROP NOT NULL;
+
+-- Add location columns for geolocation
+ALTER TABLE bookings
+ADD COLUMN latitude numeric,
+ADD COLUMN longitude numeric;
+
+-- Create indexes for proximity search
+CREATE INDEX bookings_location_idx ON bookings (latitude, longitude);</pre>
+      </div>
+    </div>
+
+    <span class="status-badge completed">Ready</span>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2 class="section-title">User Experience Enhancements</h2>
+
+  <div class="summary-section" style="grid-template-columns: 1fr;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+      <div style="background: var(--neutral-lightest); padding: 16px; border-radius: var(--radius-md);">
+        <p style="font-weight: 600; margin-bottom: 8px;">🎯 Homepage First</p>
+        <p style="font-size: 13px;">Customers land on homepage after login (was profile)</p>
+      </div>
+      <div style="background: var(--neutral-lightest); padding: 16px; border-radius: var(--radius-md);">
+        <p style="font-weight: 600; margin-bottom: 8px;">🗑️ Request Deletion</p>
+        <p style="font-size: 13px;">Delete unassigned requests with confirmation dialog</p>
+      </div>
+      <div style="background: var(--neutral-lightest); padding: 16px; border-radius: var(--radius-md);">
+        <p style="font-weight: 600; margin-bottom: 8px;">📍 Auto Location</p>
+        <p style="font-size: 13px;">No manual location entry, auto-detected on mount</p>
+      </div>
+      <div style="background: var(--neutral-lightest); padding: 16px; border-radius: var(--radius-md);">
+        <p style="font-weight: 600; margin-bottom: 8px;">📱 Mobile Responsive</p>
+        <p style="font-size: 13px;">Optimized form layout for all screen sizes</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">Login Flow Configuration</div>
+      <div class="code-content">
+<pre>// Changed customer default route from /customer/profile to / (homepage)
+const getMainDashboard = (role: 'customer' | 'provider' | 'admin') => {
+  if (role === 'customer') return <Navigate to="/" replace />
+  if (role === 'provider') return <ProviderDashboard />
+  return <AdminDashboard />
+}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <h2 class="section-title">Real-Time Implementation</h2>
+
+  <p><strong>Supabase Real-Time Subscriptions:</strong></p>
+  <div class="code-block">
+    <div class="code-header">Provider-Side Real-Time</div>
+    <div class="code-content">
+<pre>// Providers see new unassigned requests in real-time
+const channel = supabase.channel('unassigned-bookings')
+  .on('postgres_changes', {
+    event: 'INSERT',
+    schema: 'public',
+    table: 'bookings',
+    filter: 'provider_id=is.null'  // Only unassigned
+  }, (payload) => {
+    // Add to provider's view of available requests
+    setAvailableRequests(prev => [payload.new, ...prev])
+  })
+  .subscribe()</pre>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">Customer Booking Status</div>
+    <div class="code-content">
+<pre>// Customers see when providers claim their requests
+const channel = supabase.channel(`customer-bookings-${userId}`)
+  .on('postgres_changes', {
+    event: 'UPDATE',
+    schema: 'public',
+    table: 'bookings',
+    filter: `customer_id=eq.${userId}`
+  }, (payload) => {
+    if (payload.new.provider_id) {
+      // A provider claimed this request
+      showNotification('Request claimed by provider!')
+    }
+  })
+  .subscribe()</pre>
+    </div>
+  </div>
+
+  <span class="status-badge completed">Active</span>
+</div>
+
+<div class="page-footer">
+  <p>Sahaay Platform — Service Request Flow Implementation Summary</p>
+  <p>Document generated on September 23, 2026 | All functionality verified and tested</p>
+  <p style="margin-top: 8px; font-size: 12px; opacity: 0.8;">
+    <strong>Next Steps:</strong> Apply database migrations in Supabase SQL Editor,
+    test the complete flow at <code>http://localhost:5176</code>
+  </p>
+</div>

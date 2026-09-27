@@ -1,0 +1,626 @@
+<title>Sahaay Service Request Flow</title>
+<style>
+:root {
+  --color-primary: #0f766e;
+  --color-primary-light: #0d9488;
+  --color-surface: #f8fafc;
+  --color-surface-card: #ffffff;
+  --color-border: #e2e8f0;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+  --gutter: 16px;
+  --radius-lg: 1.5rem;
+  --radius-md: 1rem;
+  --radius-sm: 0.75rem;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-surface: #0f172a;
+    --color-surface-card: #1e293b;
+    --color-border: #334155;
+    --color-text: #f1f5f9;
+    --color-text-muted: #94a3b8;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-surface: #0f172a;
+  --color-surface-card: #1e293b;
+  --color-border: #334155;
+  --color-text: #f1f5f9;
+  --color-text-muted: #94a3b8;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  line-height: 1.6;
+  padding: 0 var(--gutter);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+  margin-top: 2rem;
+  color: var(--color-primary);
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--color-text-muted);
+}
+
+a {
+  color: var(--color-primary-light);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 2rem 0 4rem;
+}
+
+.header {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #115e59 100%);
+  color: white;
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+}
+
+.header h1 {
+  color: white;
+  margin-bottom: 0.75rem;
+  position: relative;
+}
+
+.header p {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  padding: 0.375rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.card {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card.highlight {
+  border-left: 4px solid var(--color-primary);
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.flow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--color-text);
+}
+
+.step-description {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}
+
+.components-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.component-card {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.2s;
+}
+
+.component-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.component-icon {
+  width: 3rem;
+  height: 3rem;
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--color-primary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.component-name {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.component-path {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.component-description {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.5rem;
+}
+
+.status-complete {
+  background: rgba(5, 150, 105, 0.15);
+  color: var(--color-success);
+}
+
+.status-in-progress {
+  background: rgba(217, 119, 6, 0.15);
+  color: var(--color-warning);
+}
+
+.status-pending {
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--color-text-muted);
+}
+
+.highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.highlight-item {
+  flex: 1;
+  min-width: 200px;
+  background: rgba(15, 118, 110, 0.05);
+  border: 1px solid rgba(15, 118, 110, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+
+.highlight-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.highlight-label {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+code {
+  font-family: 'Monaco', 'Courier New', monospace;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.code-block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 1rem 0;
+}
+
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .header {
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    gap: 2rem;
+  }
+
+  .flow-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .components-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+</style>
+
+<div class="container">
+  <header class="header">
+    <div class="badge">Platform-Directed Service Flow</div>
+    <h1>Sahaay Service Request Flow</h1>
+    <p>Complete implementation of the platform-directed service request system where customers submit requests to an unassigned provider pool and verified providers claim them.</p>
+  </header>
+
+  <section>
+    <div class="card highlight">
+      <h2>What We Built</h2>
+      <p>A customer-first service request flow that eliminates provider browsing and selection. Customers specify what they need, when they need it, and how much they're willing to pay. Verified providers then claim requests from the shared pool.</p>
+
+      <div class="highlights">
+        <div class="highlight-item">
+          <div class="highlight-number">8</div>
+          <div class="highlight-label">Service Categories</div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-number">50+</div>
+          <div class="highlight-label">Subcategories</div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-number">2</div>
+          <div class="highlight-label">Max Active Requests</div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-number">14</div>
+          <div class="highlight-label">Day Booking Window</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Customer Flow</h2>
+    <p>How customers request services on the new platform-directed model:</p>
+
+    <div class="flow-grid">
+      <div class="card">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-title">Category Selection</div>
+            <div class="step-description">Choose from 8 service categories: Electrician, Plumber, Carpenter, Painter, Driver, Cleaner, Caregiver, Technician</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">Subcategory Selection</div>
+            <div class="step-description">Select specific service (e.g., "Switch & Socket" under Electrician, "Tap & Faucet" under Plumber)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">Duration & Price</div>
+            <div class="step-description">See transparent pricing, choose duration options (for care services), view fee breakdown</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-title">Schedule & Submit</div>
+            <div class="step-description">Pick date/time (30-min slots, 9 AM–5:30 PM), enter address/notes, submit to pool with <code>provider_id: null</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Provider Flow</h2>
+    <p>How verified providers interact with the request pool:</p>
+
+    <div class="flow-grid">
+      <div class="card">
+        <div class="step">
+          <div class="step-number">A</div>
+          <div class="step-content">
+            <div class="step-title">View Unassigned Pool</div>
+            <div class="step-description">See all pending requests with <code>provider_id: null</code> matching their service category</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="step">
+          <div class="step-number">B</div>
+          <div class="step-content">
+            <div class="step-title">Claim Request</div>
+            <div class="step-description">Accept a request by updating <code>provider_id</code> to their ID, claiming it from the pool</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="step">
+          <div class="step-number">C</div>
+          <div class="step-content">
+            <div class="step-title">Manage Booking</div>
+            <div class="step-description">Continue with normal booking workflow (pending → confirmed → in-progress → completed)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Key Components Implemented</h2>
+
+    <div class="components-grid">
+      <div class="component-card">
+        <div class="component-icon">⚡</div>
+        <div class="component-name">ServiceRequestForm</div>
+        <div class="component-path">src/components/ServiceRequestForm.tsx</div>
+        <div class="component-description">Multi-step form driving the entire request flow with transparent pricing display</div>
+        <div class="status-badge status-complete">Complete</div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-icon">📱</div>
+        <div class="component-name">CustomerRequestService</div>
+        <div class="component-path">src/pages/customer/CustomerRequestService.tsx</div>
+        <div class="component-description">Page wrapper for the service request form with back navigation</div>
+        <div class="status-badge status-complete">Complete</div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-icon">🏠</div>
+        <div class="component-name">CustomerDashboard</div>
+        <div class="component-path">src/pages/customer/CustomerDashboard.tsx</div>
+        <div class="component-description">Updated with prominent "Request Service Now" call-to-action button</div>
+        <div class="status-badge status-complete">Complete</div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-icon">📋</div>
+        <div class="component-name">CustomerBookings</div>
+        <div class="component-path">src/pages/customer/CustomerBookings.tsx</div>
+        <div class="component-description">Enhanced to show "Waiting for provider" status for unassigned requests</div>
+        <div class="status-badge status-complete">Complete</div>
+      </div>
+
+      <div class="component-card">
+        <div class="component-icon">👥</div>
+        <div class="component-name">ProviderRequests</div>
+        <div class="component-path">src/pages/provider/ProviderRequests.tsx</div>
+        <div class="component-description">Updated to fetch and display unassigned pool requests matching service category</div>
+        <div class="status-badge status-complete">Complete</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Technical Implementation</h2>
+    <div class="card">
+      <h3>Database Schema Changes</h3>
+      <div class="code-block">ALTER TABLE public.bookings ALTER COLUMN provider_id DROP NOT NULL;</div>
+
+      <h3>TypeScript Interface Updates</h3>
+      <div class="code-block">export interface Booking {
+  id: string
+  customer_id: string
+  provider_id: string | null  // Now nullable
+  // ... rest of fields
+}</div>
+
+      <h3>Booking Creation Logic</h3>
+      <div class="code-block">await requestService({
+  customer_id: user.id,
+  provider_id: null,  // Goes to unassigned pool
+  service_id: categoryToServiceId[selectedCategory.slug],
+  scheduled_at: `${date}T${time}:00`,
+  address: address.trim(),
+  amount: finalAmount,
+})</div>
+
+      <h3>Active Service Limit Enforcement</h3>
+      <div class="code-block">const MAX_ACTIVE_SERVICES = 2
+if (activeCount >= MAX_ACTIVE_SERVICES) {
+  throw new Error('You have reached the maximum limit of 2 active services.')
+}</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Benefits</h2>
+    <div class="card">
+      <div class="step">
+        <div class="step-number">✓</div>
+        <div class="step-content">
+          <div class="step-title">Customer-Centric</div>
+          <div class="step-description">Focus on what you need, not who's available. No pressure to choose between providers.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">✓</div>
+        <div class="step-content">
+          <div class="step-title">Transparent Pricing</div>
+          <div class="step-description">See exactly what you'll pay before submitting, with clear platform/provider fee breakdown.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">✓</div>
+        <div class="step-content">
+          <div class="step-title">Provider Competition</div>
+          <div class="step-description">Verified providers compete by claiming requests, leading to better service quality.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">✓</div>
+        <div class="step-content">
+          <div class="step-title">Scalable</div>
+          <div class="step-description">Works with any number of providers. New requests go to pool, providers claim as capacity allows.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Service Request Flow Implementation • Completed on 2026-09-22 • Sahaay Platform</p>
+    <p>Built with React 18, TypeScript, Supabase (PostgreSQL), and Tailwind CSS</p>
+  </footer>
+</div>
